@@ -12,9 +12,6 @@
 
 ## 📸 Project Visuals
 
-> **→ Add your plot images here after running the notebooks.**
-> Place the following files in the `plots/` folder, then they will render below automatically.
-
 | Plot | Description |
 |------|-------------|
 | `plots/01_timeseries.png` | Full price time series (Jun–Dec 2025) |
