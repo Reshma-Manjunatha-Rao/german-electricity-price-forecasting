@@ -46,48 +46,7 @@ Electricity prices on the German EPEX SPOT market are highly volatile — influe
 - **Grid operators** balancing supply/demand
 - **Renewable asset owners** maximising revenue
 
-This project builds a complete pipeline from raw API data to a deployed forecasting function, using only publicly available data from **[SMARD.de](https://www.smard.de)** — the official German electricity market transparency portal.
-
----
-
-## 📁 Repository Structure
-
-```
-smard-electricity-forecast/
-│
-├── notebooks/
-│   ├── 01_data_collection.ipynb       # API client for SMARD
-│   ├── 02_eda.ipynb                   # Exploratory data analysis
-│   ├── 03_feature_engineering.ipynb   # 50 features across 7 categories
-│   ├── 04_modeling.ipynb              # Baseline, LR, RF, XGBoost
-│   └── 05_deployment.ipynb            # 24-hour forecast generation
-│
-├── src/
-│   ├── data_collector.py              # Standalone SMARD API client
-│   ├── feature_engineering.py         # Reusable feature pipeline
-│   └── predict.py                     # Prediction function
-│
-├── data/
-│   ├── electricity_prices.csv         # Raw downloaded prices
-│   ├── electricity_prices_clean.csv   # Cleaned prices
-│   └── features.csv                   # Engineered feature matrix
-│   └── feature_names.txt              # Feature name list
-│
-├── models/
-│   ├── random_forest.pkl              # ← ADD after running notebook 4
-│   ├── linear_regression.pkl          # ← ADD after running notebook 4
-│   ├── scaler.pkl                     # ← ADD after running notebook 4
-│   └── model_comparison.csv          # Results table
-│
-├── plots/                             # ← ADD .png files after running notebooks
-│   └── (see table above)
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
-
-> **Note on `models/` and `plots/`:** These folders are tracked in git but their binary contents (`.pkl`, `.png`) are excluded via `.gitignore`. Run the notebooks in order to regenerate them locally.
+This project builds a complete pipeline from raw API data to a deployed forecasting function, using only publicly available data from **[SMARD.de](https://www.smard.de)** - the official German electricity market transparency portal.
 
 ---
 
@@ -95,16 +54,16 @@ smard-electricity-forecast/
 
 | Field | Value |
 |-------|-------|
-| **Source** | [SMARD.de](https://www.smard.de) — Federal Network Agency (Bundesnetzagentur) |
-| **Series ID** | 4169 — Day-Ahead Auction prices (EPEX SPOT, Germany/Luxembourg) |
+| **Source** | [SMARD.de](https://www.smard.de) - Federal Network Agency (Bundesnetzagentur) |
+| **Series ID** | 4169 - Day-Ahead Auction prices (EPEX SPOT, Germany/Luxembourg) |
 | **Granularity** | Hourly |
-| **Period** | June 2025 – December 2025 |
+| **Period** | June 2025 - December 2025 |
 | **Records** | 5,209 hourly observations |
 | **Unit** | €/MWh |
 | **Access** | Free, public REST API (no authentication required) |
 
 **Why SMARD?**
-- Official government data — no scraping, no terms-of-service concerns
+- Official government data - no scraping, no terms-of-service concerns
 - Real market prices (EPEX SPOT Day-Ahead Auction)
 - Reflects Germany's complex grid: high renewables penetration, cross-border interconnections
 - Data is granular enough for hour-level patterns while covering enough time for weekly/seasonal features
@@ -141,17 +100,17 @@ smard-electricity-forecast/
 *XGBoost was not installed in the test environment. Install with `pip install xgboost` and it will run automatically in notebook 4.
 
 **Top 5 Features by Importance (Random Forest):**
-1. `price_lag_1` — 0.2975
-2. `price_change_6h` — 0.1813
-3. `price_lag_72` — 0.0452
-4. `day_of_week` — 0.0373
-5. `price_lag_168` — 0.0308
+1. `price_lag_1` - 0.2975
+2. `price_change_6h` - 0.1813
+3. `price_lag_72` - 0.0452
+4. `day_of_week` - 0.0373
+5. `price_lag_168` - 0.0308
 
 ### ⚠️ Honest Limitations
 
 **Linear Regression underperformed the baseline.** With 50 features, many of which are strongly correlated (multicollinearity), linear regression struggled. This is expected and is a good argument for tree-based methods in non-linear price data.
 
-**MAPE = ∞ for all models.** The dataset contains near-zero or negative electricity prices (a real phenomenon in Germany during renewable oversupply — solar/wind can push prices below zero). Division by near-zero blows up MAPE. A robust metric like sMAPE should be used instead in future iterations.
+**MAPE = ∞ for all models.** The dataset contains near-zero or negative electricity prices (a real phenomenon in Germany during renewable oversupply - solar/wind can push prices below zero). Division by near-zero blows up MAPE. A robust metric like sMAPE should be used instead in future iterations.
 
 **R² = 0.30 is a starting point.** 24-hour ahead price forecasting is genuinely hard. External regressors (solar/wind generation forecasts, temperature, cross-border flows) would significantly improve performance.
 
