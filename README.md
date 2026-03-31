@@ -39,7 +39,7 @@
 
 ## 🎯 Project Goal
 
-Electricity prices on the German EPEX SPOT market are highly volatile — influenced by renewable generation, cross-border flows, demand cycles, and weather. Accurate short-term price forecasting has direct commercial value for:
+Electricity prices on the German EPEX SPOT market are highly volatile - influenced by renewable generation, cross-border flows, demand cycles, and weather. Accurate short-term price forecasting has direct commercial value for:
 
 - **Energy traders** optimising buy/sell decisions
 - **Industrial consumers** scheduling flexible loads
