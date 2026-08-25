@@ -1,5 +1,5 @@
 # ⚡ German Electricity Price Forecasting
-### End-to-end ML pipeline · SMARD API · 24-hour ahead predictions · Random Forest
+### End-to-end ML pipeline | SMARD API | 24-hour ahead predictions | Random Forest
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
