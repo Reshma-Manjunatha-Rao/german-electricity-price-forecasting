@@ -50,6 +50,11 @@ This project builds a complete pipeline from raw API data to a deployed forecast
 
 ---
 
+## 🎯 Why I built this?
+I wanted to work on a project in which I own the whole workflow on real data, from API call to forecast, and where honest evaluation matters. Day-ahead prices are a good test for that: a naive "same as the last known price" baseline is surprisingly hard to beat. I chose the German day-ahead market because the data is official, public, hourly and needs no API key, and because the price is driven by physical things: renewable generation, demand cycles and cross-border coupling.
+
+---
+
 ## 📊 Dataset
 
 | Field | Value |
@@ -116,6 +121,29 @@ This project builds a complete pipeline from raw API data to a deployed forecast
 
 ---
 
+## 🎯 Scope of the data: why 5,209 hourly observations
+The dataset is about seven months of hourly day-ahead prices (June–December 2025) from SMARD series 4169. This was the window I had downloaded when I started building the pipeline as I wanted the most recent months. I treated it as a first iteration: enough hours to build 168-hour lags and 48-hour rolling windows and still keep a test set, and small enough to iterate quickly in notebooks.
+
+What this scope costs, and what I would not claim from it:
+- **Less than one seasonal cycle** The data runs from summer into early winter, so the model cannot learn a full annual pattern; month_sin / month_cos see each month only once.
+- **Rows are lost to the features** A 168-hour lag and the 24-hour target shift remove the first and last rows, so the usable table is shorter than 5,209 rows.
+- **A short test set** The 14.8% improvement over the baseline is therefore an estimate with real uncertainty, not a settled number.
+- **A market change inside the data** Since 1 October 2025, the German day-ahead auction trades in 15-minute products; hourly prices are the average of four quarter-hours. Any difference in price behaviour before and after that date is mixed into the results.
+
+**A personal note**-
+Since this was my first end-to-end forecasting project, I learnt three main things from it:
+1. To build the naive baseline first, because it tells you whether anything you do is real.
+2. To check that your metric survives your data (MAPE did not).
+3. To remember that the data window decides what you may conclude.
+
+**How I would improve it next**
+1. **More history** - Several years of data, so that every season, holiday pattern and the October 2025 market change are covered, and a proper long test period is included.
+2. **Walk-forward validation** - Use TimeSeriesSplit instead of a single split, with confidence intervals for the MAE.
+3. **External drivers** - To include wind and solar generation and their forecasts, temperature, load and cross-border flows; these are what move prices.
+4. **Better metrics and models** - sMAPE next to MAE, gradient boosting (LightGBM / XGBoost), and quantile forecasts that express uncertainty.
+
+---
+
 ## 🚀 Quickstart
 
 ### 1. Clone and install
@@ -172,21 +200,9 @@ print(f"Change from current: {result['pct_change']:+.1f}%")
 
 ---
 
-## 🔮 Next Steps / Roadmap
-
-- [ ] Add external features: solar/wind generation from SMARD (series IDs 125, 4066)
-- [ ] Add temperature data via Open-Meteo API
-- [ ] Implement LightGBM and compare with XGBoost
-- [ ] Try LSTM / Temporal Fusion Transformer for sequence modelling
-- [ ] Add walk-forward cross-validation (TimeSeriesSplit)
-- [ ] Replace MAPE with sMAPE for robustness to near-zero prices
-- [ ] Build a simple Streamlit dashboard for live forecasts
-
----
-
 ## 📄 License
 
-MIT — free to use, modify, and share with attribution.
+MIT - free to use, modify, and share with attribution.
 
 ---
 
